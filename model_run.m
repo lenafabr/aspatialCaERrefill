@@ -1,7 +1,12 @@
+% This script simulates Ca2+ dynamics with hardcoded parameters for two cases:
+% - Wild Type (WT): set volchange = 1 and params.k_soce = 6.5227
+% - RTN3OE: set volchange = 4.3808 and params.k_soce = 3.9583
+% Ensure the matching k_soce value is uncommented when switching between cases
+
 %% Setup Ca2+ model parameters
 
 volchange = 1;  % Set to 1 to run simulation with the ER volume of WT
-% volchange = 4.38;  % Set to 4.38 which is the ratio of ER volume of RTN3OE and WT 
+% volchange = 4.3808;  % Set to 4.3808 which is the ratio of ER volume of RTN3OE and WT 
 
 % Volume of ER and cytosol (μm^3)
 params.VER = 211 * volchange;
