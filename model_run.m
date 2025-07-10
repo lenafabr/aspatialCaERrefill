@@ -1,63 +1,7 @@
-%% Load and calculate WT ER geometry
-
-% Load mesh of WT ER network from simulation output file
-dirname = '/data/proj/ERCaSims/results/refill/diamond3degNF/start0/';
-filename = 'diamondR10_nf_nuccon91.9.0.mesh.txt';
-filename = [dirname filename];
-MSH = MeshObj(filename);
-
-a = 0.05; % ER tubule radius (μm)
-
-% Compute total ER volume assuming all segments are cylindrical
-totvol_WT = sum(MSH.len) * pi * a^2;
-
-% Identify nuclear region (resvind == 1 marks nuclear sheet)
-isnuc = (MSH.resvind == 1);
-
-% Compute total ER surface area:
-% - For tubules: side area of cylinders (excluding nuclear sheet)
-% - For nuclear sheet: approximate as a sphere with radius 5 μm
-totA_WT = sum(MSH.len(~isnuc)) * 2 * pi * a + 4 * pi * 5^2;
-
-% Compute volume of peripheral (non-nuclear) ER
-periphvol_WT = sum(MSH.len(~isnuc)) * pi * a^2;
-
-%% Load and calculate RTN3OE ER geometry
-
-% Load mesh of RTN3OE ER with vesiculated structure
-dirname = '~/UCSD/data/ERCaSims/results/refill/HCPbub/deg6_bubR0pt6tubeRpt018lenpt3_10sheet_buffscl/';
-filename = 'HCP_nf_bub_10sheet_buffscl.2.0.mesh.txt';
-filename = [dirname filename];
-MSH = MeshObj(filename);
-
-a = 0.018; % ER tubule radius in RTN3OE (μm)
-
-% Compute total ER volume (same formula)
-totvol_RTN3OE = sum(MSH.len) * pi * a^2;
-
-% Identify nuclear and vesicle regions
-isnuc = (MSH.resvind == 1);
-isbub = (MSH.resvind > 1);
-nbub = nnz(isbub);  % Number of vesicles
-
-% Estimate vesicle radius assuming spherical geometry
-bubrad = (MSH.len(find(isbub,1)) / (4/3 * pi) * pi * a^2)^(1/3);
-
-% Compute total surface area:
-% - Tubules (excluding nuclear and vesicle)
-% - Vesicles as spheres
-% - One nuclear sheet approximated as 5 μm radius sphere
-totA_RTN3OE = sum(MSH.len(~isbub & ~isnuc)) * 2 * pi * a + nbub * 4 * pi * bubrad^2 + 4 * pi * 5^2;
-
-% Compute non-nuclear ER volume (tubules + vesicles)
-bubvol_RTN3OE = sum(MSH.len(~isnuc)) * pi * a^2;
-
-%% Compute volume scaling factor between WT and RTN3OE ER
-volchange = totvol_RTN3OE / totvol_WT;
-
 %% Setup Ca2+ model parameters
 
-volchange = 1;  % Set to 1 to ignore geometric scaling in this run
+volchange = 1;  % Set to 1 to run simulation with the ER volume of WT
+% volchange = 4.38;  % Set to 4.38 which is the ratio of ER volume of RTN3OE and WT 
 
 % Volume of ER and cytosol (μm^3)
 params.VER = 211 * volchange;
