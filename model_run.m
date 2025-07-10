@@ -23,8 +23,8 @@ params.v4 = 230;
 params.k_pl = 0.114;
 
 % SOCE entry rate (μm^3/s)
-params.k_soce = 6.5227;
-%params.k_soce = 3.9583;
+params.k_soce = 6.5227;  % for WT
+%params.k_soce = 3.9583;  % for RTN3OE
 
 % Extracellular Ca2+ concentration (μM)
 params.c_cs = 200;
